@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import time
 import random
 import json
-import win32api, win32print, time
+#import win32api, win32print, time
 import pandas as pd
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer
 from reportlab.lib import colors, pagesizes, units
@@ -58,12 +58,12 @@ def print_something(request):
     #print(params)
     import os
 
-    os.startfile("C:/Users/CafeBoard/Desktop/file.pdf", "print")
+    #os.startfile("C:/Users/CafeBoard/Desktop/file.pdf", "print")
     #win32api.ShellExecute(0, 'open', GSPRINT_PATH, params, 'K', 0)
-    time.sleep(1)
+    #time.sleep(1)
     #win32print.SetDefaultPrinter('NowBar')
     #win32api.ShellExecute(0, "print", 'C:/Users/CafeBoard/Desktop/file.html', None, ".", 0)
-    time.sleep(1)
+    #time.sleep(1)
     #win32print.SetDefaultPrinter('Cash')
 
     data = request.POST
@@ -94,35 +94,79 @@ def print_something(request):
     Story.append(Paragraph(ptext, styles["Persian"]))
     Story.append(Spacer(1, 12))
 
-    invoice_data = []
-    item_data_list = []
-    for item in data['items']:
-        item_data_list.append(Paragraph(get_farsi_bulleted_text(item['name'], wrap_length=120), styles["Persian"]))
-        item_data_list.append(item['numbers'])
-        item_data_list.append(item['price'])
-        invoice_data.append(item_data_list)
-        item_data_list = []
+    if data['is_customer_print'] == 1:
+        ptext = '<font size=8>%s</font>' % get_farsi_bulleted_text(data['customer_name'], wrap_length=120)
+        Story.append(Paragraph(ptext, styles["Persian"]))
+        Story.append(Spacer(1, 12))
 
-    t_style = TableStyle([
-        ('ALIGN', (1, 1), (-2, -2), 'RIGHT'),
-        ('TEXTCOLOR', (1, 1), (-2, -2), colors.red),
-        ('VALIGN', (0, 0), (0, -1), 'TOP'),
-        ('TEXTCOLOR', (0, 0), (0, -1), colors.blue),
-        ('ALIGN', (0, -1), (-1, -1), 'CENTER'),
-        ('TEXTFONT', (0, -1), (-1, -1), 'IRANSANS'),
-        ('VALIGN', (0, -1), (-1, -1), 'MIDDLE'),
-        ('TEXTFONT', (0, -1), (-1, -1), 'IRANSANS'),
-        ('TEXTCOLOR', (0, -1), (-1, -1), colors.green),
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-    ])
-
-    t = Table(invoice_data, colWidths=20 * units.mm)
-    t.setStyle(t_style)
-
-    Story.append(t)
+    ptext = '<font size=10>%s</font>' % data['table_name']
+    Story.append(Paragraph(get_farsi_bulleted_text(ptext, wrap_length=120), styles["Persian"]))
     Story.append(Spacer(1, 12))
 
-    doc.build(Story)
+    if data['is_customer_print'] == 0:
+        invoice_data = []
+        item_data_list = []
+        for item in data['items']:
+            item_data_list.append(Paragraph(get_farsi_bulleted_text(str(item['numbers']), wrap_length=120), styles["Persian"]))
+            item_data_list.append(Paragraph(get_farsi_bulleted_text(item['name'], wrap_length=120), styles["Persian"]))
+            invoice_data.append(item_data_list)
+            item_data_list = []
+
+        t_style = TableStyle([
+            ('ALIGN', (1, 1), (-2, -2), 'RIGHT'),
+            ('TEXTCOLOR', (1, 1), (-2, -2), colors.black),
+            ('VALIGN', (0, 0), (0, -1), 'RIGHT'),
+            ('TEXTCOLOR', (0, 0), (0, -1), colors.black),
+            ('ALIGN', (0, -1), (-1, -1), 'CENTER'),
+            ('TEXTFONT', (0, -1), (-1, -1), 'IRANSANS'),
+            ('VALIGN', (0, -1), (-1, -1), 'RIGHT'),
+            ('TEXTFONT', (0, -1), (-1, -1), 'IRANSANS'),
+            ('TEXTCOLOR', (0, -1), (-1, -1), colors.black),
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ])
+
+        t = Table(invoice_data, colWidths=20 * units.mm)
+        t.setStyle(t_style)
+
+        Story.append(t)
+        Story.append(Spacer(1, 12))
+
+        doc.build(Story)
+
+    else:
+        invoice_data = []
+        item_data_list = []
+        for item in data['items']:
+            item_data_list.append(Paragraph(get_farsi_bulleted_text(str(item['price']), wrap_length=120), styles["Persian"]))
+            item_data_list.append(Paragraph(get_farsi_bulleted_text(str(item['numbers']), wrap_length=120), styles["Persian"]))
+            item_data_list.append(Paragraph(get_farsi_bulleted_text(item['name'], wrap_length=120), styles["Persian"]))
+            invoice_data.append(item_data_list)
+            item_data_list = []
+
+        t_style = TableStyle([
+            ('ALIGN', (1, 1), (-2, -2), 'RIGHT'),
+            ('TEXTCOLOR', (1, 1), (-2, -2), colors.red),
+            ('VALIGN', (0, 0), (0, -1), 'TOP'),
+            ('TEXTCOLOR', (0, 0), (0, -1), colors.blue),
+            ('ALIGN', (0, -1), (-1, -1), 'CENTER'),
+            ('TEXTFONT', (0, -1), (-1, -1), 'IRANSANS'),
+            ('VALIGN', (0, -1), (-1, -1), 'MIDDLE'),
+            ('TEXTFONT', (0, -1), (-1, -1), 'IRANSANS'),
+            ('TEXTCOLOR', (0, -1), (-1, -1), colors.green),
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ])
+
+        t = Table(invoice_data, colWidths=20 * units.mm)
+        t.setStyle(t_style)
+
+        Story.append(t)
+        Story.append(Spacer(1, 12))
+
+        doc.build(Story)
+
+    for printer in data['printers']:
+        print("Printing in %s" % printer)
 
     return JsonResponse({"response": 'OK'})
