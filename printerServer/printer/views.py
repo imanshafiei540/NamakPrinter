@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import time
 import random
 import json
-# import win32api, win32print, time
+import win32api, win32print, time, os
 import pandas as pd
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer
 from reportlab.lib import colors, pagesizes, units
@@ -90,6 +90,13 @@ def print_something(request):
             Story = []
             logo = "/Users/impala69/Desktop/boardlogored.png"
             limitedDate = "03/05/2010"
+    doc = SimpleDocTemplate("form_letter.pdf", pagesize=(80 * units.mm, 200 * units.mm),
+                            rightMargin=72, leftMargin=72,
+                            topMargin=12, bottomMargin=18)
+    pdfmetrics.registerFont(TTFont('IRANSANS', 'C:/Users/CafeBoard/Desktop/font.ttf'))
+    Story = []
+    logo = "C:/Users/CafeBoard/Desktop/boardlogored.png"
+    limitedDate = "03/05/2010"
 
             formatted_time = time.ctime()
             full_name = "Infosys"
@@ -226,5 +233,13 @@ def print_something(request):
         Story.append(Spacer(1, 12))
 
         doc.build(Story)
+
+    for printer in data['printers']:
+        print("Printing in %s" % printer)
+        print("Printing in %s" % printer)
+        currentprinter = 'Cash'
+        params = '-ghostscript "' + GHOSTSCRIPT_PATH + '" -printer "' + currentprinter + '" -copies 1 "C:/Users/CafeBoard/Desktop/form_letter.pdf "'
+        print(params)
+        win32api.ShellExecute(0, 'open', GSPRINT_PATH, params, 'K', 0)
 
     return JsonResponse({"response": 'OK'})
