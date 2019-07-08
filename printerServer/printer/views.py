@@ -86,20 +86,13 @@ def print_something(request):
             doc = SimpleDocTemplate("form_letter.pdf", pagesize=(80 * units.mm, 200 * units.mm),
                                     rightMargin=72, leftMargin=72,
                                     topMargin=12, bottomMargin=18)
-            pdfmetrics.registerFont(TTFont('IRANSANS', '/Users/impala69/Desktop/font.ttf'))
+            pdfmetrics.registerFont(TTFont('IRANSANS', 'C:/Users/CafeBoard/Desktop/font.ttf'))
+            # pdfmetrics.registerFont(TTFont('IRANSANS', '/Users/impala69/Desktop/font.ttf'))
             Story = []
-            logo = "/Users/impala69/Desktop/boardlogored.png"
-            limitedDate = "03/05/2010"
-    doc = SimpleDocTemplate("form_letter.pdf", pagesize=(80 * units.mm, 200 * units.mm),
-                            rightMargin=72, leftMargin=72,
-                            topMargin=12, bottomMargin=18)
-    pdfmetrics.registerFont(TTFont('IRANSANS', 'C:/Users/CafeBoard/Desktop/font.ttf'))
-    Story = []
-    logo = "C:/Users/CafeBoard/Desktop/boardlogored.png"
-    limitedDate = "03/05/2010"
+            logo = "C:/Users/CafeBoard/Desktop/boardlogored.png"
+            # logo = "/Users/impala69/Desktop/boardlogored.png"
 
             formatted_time = time.ctime()
-            full_name = "Infosys"
 
             im = Image(logo, 1 * units.inch, 1 * units.inch, hAlign='LEFT')
             Story.append(im)
@@ -160,10 +153,8 @@ def print_something(request):
         pdfmetrics.registerFont(TTFont('IRANSANS', '/Users/impala69/Desktop/font.ttf'))
         Story = []
         logo = "/Users/impala69/Desktop/boardlogored.png"
-        limitedDate = "03/05/2010"
 
         formatted_time = time.ctime()
-        full_name = "Infosys"
 
         im = Image(logo, 1 * units.inch, 1 * units.inch, hAlign='LEFT')
         Story.append(im)
