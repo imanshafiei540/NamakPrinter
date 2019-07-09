@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import time
 import random
 import json
-import win32api, win32print, time, os
+# import win32api, win32print, time, os
 import pandas as pd
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer
 from reportlab.lib import colors, pagesizes, units
@@ -15,59 +15,24 @@ from reportlab.pdfbase import pdfmetrics
 from bidi.algorithm import get_display
 from rtl import reshaper
 import textwrap
-
-
-def get_farsi_text(text):
-    if reshaper.has_arabic_letters(text):
-        words = text.split()
-        reshaped_words = []
-        for word in words:
-            if reshaper.has_arabic_letters(word):
-                # for reshaping and concating words
-                reshaped_text = reshaper.reshape(word)
-                # for right to left
-                bidi_text = get_display(reshaped_text)
-                reshaped_words.append(bidi_text)
-            else:
-                reshaped_words.append(word)
-        reshaped_words.reverse()
-        return ' '.join(reshaped_words)
-    return text
-
-
-def get_farsi_bulleted_text(text, wrap_length=None):
-    farsi_text = get_farsi_text(text)
-    if wrap_length:
-        line_list = textwrap.wrap(farsi_text, wrap_length)
-        line_list.reverse()
-
-        farsi_text = '<br/>'.join(line_list)
-        return '<font>%s</font>' % farsi_text
-    return '<font>%s &#x02022;</font>' % farsi_text
-
+import pdfkit
 
 GHOSTSCRIPT_PATH = "C:/Program Files/gs/gs9.27/bin/gswin64.exe"
 GSPRINT_PATH = 'C:/Program Files/gs/gsprint/gsprint.exe'
 FILE = 'C:/Users/CafeBoard/Desktop/file.html'
 
+options = {
+    'page-width': '80mm',
+    'page-height': '200mm',
+    'margin-top': '0.75in',
+    'margin-right': '0.75in',
+    'margin-bottom': '0.75in',
+    'margin-left': '0.75in',
+}
+pdfkit.from_url('http://127.0.0.1:9001/template/invoice-cash?invoice_id=91', 'out.pdf', options=options)
 
 @csrf_exempt
 def print_something(request):
-    currentprinter = 'Cash'
-    # win32print.SetDefaultPrinter('NowKitchen')
-    # win32api.ShellExecute(0, "print", 'C:/Users/CafeBoard/Desktop/file.pdf', None, ".", 0)
-    # params = '-ghostscript "' + GHOSTSCRIPT_PATH + '" -printer "' + currentprinter + '" -copies 1 "C:/Users/CafeBoard/Desktop/file.html "'
-    # print(params)
-    import os
-
-    # os.startfile("C:/Users/CafeBoard/Desktop/file.pdf", "print")
-    # win32api.ShellExecute(0, 'open', GSPRINT_PATH, params, 'K', 0)
-    # time.sleep(1)
-    # win32print.SetDefaultPrinter('NowBar')
-    # win32api.ShellExecute(0, "print", 'C:/Users/CafeBoard/Desktop/file.html', None, ".", 0)
-    # time.sleep(1)
-    # win32print.SetDefaultPrinter('Cash')
-
     data = request.POST
     print(data)
     for e in data:
