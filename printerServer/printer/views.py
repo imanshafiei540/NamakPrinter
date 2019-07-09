@@ -48,7 +48,7 @@ def print_something(request):
 
             # config printers
 
-            doc = SimpleDocTemplate("form_letter.pdf", pagesize=(80 * units.mm, 200 * units.mm),
+            doc = SimpleDocTemplate("C:/Users/CafeBoard/Desktop/%s.pdf" % printer_name, pagesize=(80 * units.mm, 200 * units.mm),
                                     rightMargin=72, leftMargin=72,
                                     topMargin=12, bottomMargin=18)
             pdfmetrics.registerFont(TTFont('IRANSANS', 'C:/Users/CafeBoard/Desktop/font.ttf'))
@@ -80,6 +80,8 @@ def print_something(request):
 
             for item in printer_data['items']:
                 item_data_list.append(
+                    Paragraph(get_farsi_bulleted_text(str(item['description']), wrap_length=120), styles["Persian"]))
+                item_data_list.append(
                     Paragraph(get_farsi_bulleted_text(str(item['numbers']), wrap_length=120), styles["Persian"]))
                 item_data_list.append(
                     Paragraph(get_farsi_bulleted_text(item['name'], wrap_length=120), styles["Persian"]))
@@ -108,16 +110,25 @@ def print_something(request):
 
             doc.build(Story)
             invoice_data = []
+
             print("printing in: %s" % printer_name)
+            currentprinter = printer_name
+            params = '-ghostscript "' + GHOSTSCRIPT_PATH + '" -printer "' + currentprinter + '" -copies 1 "C:/Users/CafeBoard/Desktop/"' + printer_name + '".pdf "'
+            print(params)
+            win32api.ShellExecute(0, 'open', GSPRINT_PATH, params, 'K', 0)
+
+
 
     else:
 
-        doc = SimpleDocTemplate("form_letter.pdf", pagesize=(80 * units.mm, 200 * units.mm),
+        doc = SimpleDocTemplate("C:/Users/CafeBoard/Desktop/form_letter.pdf", pagesize=(80 * units.mm, 200 * units.mm),
                                 rightMargin=72, leftMargin=72,
                                 topMargin=12, bottomMargin=18)
-        pdfmetrics.registerFont(TTFont('IRANSANS', '/Users/impala69/Desktop/font.ttf'))
+        # pdfmetrics.registerFont(TTFont('IRANSANS', '/Users/impala69/Desktop/font.ttf'))
+        pdfmetrics.registerFont(TTFont('IRANSANS', 'C:/Users/CafeBoard/Desktop/font.ttf'))
         Story = []
-        logo = "/Users/impala69/Desktop/boardlogored.png"
+        logo = "C:/Users/CafeBoard/Desktop/boardlogored.png"
+        # logo = "/Users/impala69/Desktop/boardlogored.png"
 
         formatted_time = time.ctime()
 
@@ -190,9 +201,6 @@ def print_something(request):
 
         doc.build(Story)
 
-    for printer in data['printers']:
-        print("Printing in %s" % printer)
-        print("Printing in %s" % printer)
         currentprinter = 'Cash'
         params = '-ghostscript "' + GHOSTSCRIPT_PATH + '" -printer "' + currentprinter + '" -copies 1 "C:/Users/CafeBoard/Desktop/form_letter.pdf "'
         print(params)
