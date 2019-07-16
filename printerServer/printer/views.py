@@ -23,15 +23,15 @@ def print_something(request):
             if len(printer_data['items']) == 0:
                 break
             else:
-                options = {
-                    'page-width': '80mm',
-                    'page-height': '200mm',
-                    'quiet': '',
-                    'read-args-from-stdin': ''
-                }
-                pdfkit.from_url('http://127.0.0.1:9001/template/invoice-no-cash?invoice_id=%s&printer_name=%s' % (
-                    data['invoice_id'], printer_name), '%s.pdf' % printer_name,
-                                options=options)
+                # options = {
+                #     'page-width': '80mm',
+                #     'page-height': '200mm',
+                #     'quiet': '',
+                #     'read-args-from-stdin': ''
+                # }
+                # pdfkit.from_url('http://127.0.0.1:9001/template/invoice-no-cash?invoice_id=%s&printer_name=%s' % (
+                #     data['invoice_id'], printer_name), '%s.pdf' % printer_name,
+                #                 options=options)
     # print("printing in: %s" % printer_name)
     # currentprinter = printer_name
     # params = '-ghostscript "' + GHOSTSCRIPT_PATH + '" -printer "' + currentprinter + '" -copies 1 "C:/Users/CafeBoard/Desktop/"' + printer_name + '".pdf "'
@@ -39,14 +39,14 @@ def print_something(request):
     # win32api.ShellExecute(0, 'open', GSPRINT_PATH, params, 'K', 0)
 
     else:
-        options = {
-            'page-width': '80mm',
-            'page-height': '200mm',
-            'quiet': '',
-            'read-args-from-stdin': ''
-        }
-        pdfkit.from_url('http://127.0.0.1:9001/template/invoice-cash?invoice_id=%s' % data['invoice_id'], 'cash.pdf',
-                        options=options)
+        # options = {
+        #     'page-width': '80mm',
+        #     'page-height': '200mm',
+        #     'quiet': '',
+        #     'read-args-from-stdin': ''
+        # }
+        # pdfkit.from_url('http://127.0.0.1:9001/template/invoice-cash?invoice_id=%s' % data['invoice_id'], 'cash.pdf',
+        #                 options=options)
 
         # currentprinter = 'Cash'
         # params = '-ghostscript "' + GHOSTSCRIPT_PATH + '" -printer "' + currentprinter + '" -copies 1 "C:/Users/CafeBoard/Desktop/form_letter.pdf "'
